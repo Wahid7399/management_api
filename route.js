@@ -137,7 +137,6 @@ router.post("/getLog/",async(req,res)=>{
             res.send([]).status(404);
         });
 })
-
 router.delete("/log/:id", async (req, res) => {
     const log = await Log.findByPk(parseInt(req.params.id));
     if (!log)
