@@ -52,6 +52,16 @@ router.put("/:id", async (req, res) => {
   res.send(user);
 });
 
+router.put("/email/:email", async (req, res) => {
+  const user = await User.findOne({where:{email:(req.params.email)}});
+  if (!user)
+    return res.status(404).send("User not found");
+  await user.update({
+    ...req.body
+  });
+  res.send(user);
+});
+
 router.delete("/:id", async (req, res) => {
   const user = await User.findByPk(parseInt(req.params.id));
   if (!user)
@@ -62,12 +72,21 @@ router.delete("/:id", async (req, res) => {
   res.send(user);
 });
 
-router.get("/email/:emial",async (req, res) => {
-    const user = await User.findOne({where:{id:req.params.email}});
+router.delete("/email/:email", async (req, res) => {
+  const user = await User.findOne({where:{email:(req.params.email)}});
+  if (!user)
+    return res.status(404).send("The user not found.");
+
+  await user.destroy();
+  res.send(user);
+});
+
+router.get("/email/:email",async (req, res) => {
+    const user = await User.findOne({where:{email:req.params.email}});
     if (!user)
       return res.status(404).send("User not found");
     res.send(user);
-  });
+});
 
 router.get("/:id",async (req, res) => {
   const user = await User.findOne({where:{id:req.params.id}});
@@ -75,6 +94,7 @@ router.get("/:id",async (req, res) => {
     return res.status(404).send("User not found");
   res.send(user);
 });
+
 router.post("/Logout/",async(req,res)=>{
     const user = await User.findOne({where:{email:req.body.email}});
     if (!user)
